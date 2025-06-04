@@ -1,12 +1,12 @@
-// Initialize the Leaflet map
+// The map
 const map = L.map('map').setView([52.0, 5.0], 7);
 
-// Add OpenStreetMap tile layer
+// Basemap
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// Filter out features with invalid coordinates
+// Filter bad geometries
 const validFeatures = geojsonData.features.filter(f => {
   return f.geometry &&
          f.geometry.type === "Point" &&
@@ -16,7 +16,7 @@ const validFeatures = geojsonData.features.filter(f => {
          typeof f.geometry.coordinates[1] === 'number';
 });
 
-// Add valid GeoJSON data to the map
+// Map good geometries
 L.geoJSON({ type: "FeatureCollection", features: validFeatures }, {
   pointToLayer: function (feature, latlng) {
     return L.circleMarker(latlng, {
@@ -30,31 +30,29 @@ L.geoJSON({ type: "FeatureCollection", features: validFeatures }, {
 
   onEachFeature: function (feature, layer) {
     if (feature.properties && feature.properties.Full_Path && feature.properties.File_Name) {
-      // Show file name as popup
+      // Popup
       layer.bindPopup(feature.properties.File_Name);
 
-      // Click event to load image
+      // Load image when clicking
       layer.on('click', () => {
         let fullPath = feature.properties.Full_Path || feature.properties.File_Name;
         if (!fullPath) return;
 
-        // Convert backslashes to forward slashes
+        // Convert backslashes to forward
         fullPath = fullPath.replace(/\\/g, '/');
 
-        // Extract relative path from 'drpimages/'
+        // Get path
         const drpimagesIndex = fullPath.toLowerCase().indexOf('drpimages/');
         let relativePath = '';
 
         if (drpimagesIndex !== -1) {
-          relativePath = fullPath.substring(drpimagesIndex); // 'drpimages/...'
+          relativePath = fullPath.substring(drpimagesIndex);
         } else {
-          // Fallback: just use last 3 parts
           const parts = fullPath.split('/');
           relativePath = parts.slice(-3).join('/');
           relativePath = 'drpimages/' + relativePath;
         }
 
-        // Force image reload using timestamp to avoid caching issues
         const img = document.getElementById('feature-image');
         if (img) {
           img.src = '';
