@@ -10,8 +10,8 @@ arcpy.env.overwriteOutput = True
 
 ########################################################################
 ## VERANDER DEZE LOCATIE NAAR DE HOOFDFOLDER VAN JOUW DRP VERZAMELING ##
-drp_folder = r"C:\Users\crist\Business\Coding\GitHubRepositories\drpviewer\drpimages"
-root = r"C:\Users\crist\Business\Coding\GitHubRepositories\drpviewer"
+drp_folder = r"...\drpviewer\drpimages"
+root = r"...\drpviewer"
 ########################################################################
 
 #Image input
