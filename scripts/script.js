@@ -38,25 +38,13 @@ L.geoJSON({ type: "FeatureCollection", features: validFeatures }, {
         let fullPath = feature.properties.Full_Path || feature.properties.File_Name;
         if (!fullPath) return;
 
-        // Convert backslashes to forward
+        // Convert backslashes to forward slashes
         fullPath = fullPath.replace(/\\/g, '/');
-
-        // Get path
-        const drpimagesIndex = fullPath.toLowerCase().indexOf('drpimages/');
-        let relativePath = '';
-
-        if (drpimagesIndex !== -1) {
-          relativePath = fullPath.substring(drpimagesIndex);
-        } else {
-          const parts = fullPath.split('/');
-          relativePath = parts.slice(-3).join('/');
-          relativePath = 'drpimages/' + relativePath;
-        }
 
         const img = document.getElementById('feature-image');
         if (img) {
-          img.src = '';
-          img.src = relativePath + '?t=' + new Date().getTime();
+          img.src = '';  // Clear existing src to force reload
+          img.src = fullPath + '?t=' + new Date().getTime();
         }
       });
     }
